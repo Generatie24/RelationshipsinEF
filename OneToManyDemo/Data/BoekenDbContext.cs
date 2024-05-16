@@ -15,7 +15,7 @@ namespace OneToManyDemo.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // configure Auteur entity
+            //configure Auteur entity
             modelBuilder.Entity<Auteur>()
                 .HasKey(a => a.AuteurId);
             modelBuilder.Entity<Auteur>()
@@ -23,7 +23,20 @@ namespace OneToManyDemo.Data
                 .WithOne(b => b.Auteur)
                 .HasForeignKey(b => b.AuteurId)
                 .OnDelete(DeleteBehavior.NoAction);
-            
+
+
+            // configure Boek entity
+            modelBuilder.Entity<Boek>()
+                .HasKey(b => b.BoekId);
+            modelBuilder.Entity<Boek>()
+                .HasOne(b => b.Auteur)
+                .WithMany(a => a.Boeken)
+                .HasForeignKey(b => b.AuteurId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+
+
 
             SeedData.AddRecords(modelBuilder);
         }
