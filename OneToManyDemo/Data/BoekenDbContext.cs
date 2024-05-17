@@ -40,5 +40,6 @@ namespace OneToManyDemo.Data
 
             SeedData.AddRecords(modelBuilder);
         }
+        public DbSet<OneToManyDemo.Models.ViewModels.BoekenViewModel> BoekenViewModel { get; set; } = default!;
     }
 }

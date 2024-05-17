@@ -34,7 +34,7 @@ namespace OneToManyDemo
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Boeken}/{action=Index}/{id?}");
+                pattern: "{controller=Boeken}/{action=Filters}/{id?}");
 
             app.Run();
         }
