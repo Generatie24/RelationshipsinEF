@@ -7,6 +7,8 @@ namespace OneToManyDemo.Models
     {
         [Key]
         public int BoekId { get; set; }
+
+        [StringLength(50)]
         public string Titel { get; set; }
 
         [ForeignKey("Auteur")]

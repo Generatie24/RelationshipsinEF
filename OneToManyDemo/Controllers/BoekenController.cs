@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using OneToManyDemo.Data;
 using OneToManyDemo.Models;
@@ -154,6 +155,40 @@ namespace OneToManyDemo.Controllers
             boek.AuteurId = viewModel.AuteurId;
             _context.Update(boek);
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Filters));
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var boek = await _context.Boeks
+                .Include(b => b.Auteur)
+                .FirstOrDefaultAsync(b => b.BoekId == id);
+            if (boek == null)
+            {
+                return NotFound();
+            }
+
+            return View(boek);
+        }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var boek = await _context.Boeks.FindAsync(id);
+            if (boek == null)
+            {
+                return NotFound();
+            }
+
+           
+            _context.Boeks.Remove(boek);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Filters));
         }
     }

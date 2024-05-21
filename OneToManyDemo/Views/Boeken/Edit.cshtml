@@ -9,6 +9,8 @@
  <div>
      <form asp-action="Edit" asp-controller="Boeken">
 
+        <input type="hidden" asp-for="BoekId" />
+
         <div class="form-group">
             <label asp-for="Titel" class="control-label"></label>
             <input asp-for="Titel" class="form-control" />
@@ -22,7 +24,6 @@
             
             <span asp-validation-for="AuteurId" class="text-danger"></span>
         </div>
-        <input type="hidden" asp-for="BoekId"/>
         <div class="form-group">
             <input asp-action="Edit" asp-controller="Boeken" type="submit" value="Save" class="btn btn-primary" />
         </div>
