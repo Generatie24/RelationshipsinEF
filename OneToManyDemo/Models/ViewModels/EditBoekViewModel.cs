@@ -1,0 +1,18 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OneToManyDemo.Models.ViewModels
+{
+    public class EditBoekViewModel
+    {
+        public int BoekId { get; set; }
+
+        [Required(ErrorMessage = "Titel is verplicht")]
+        public string Titel { get; set; }
+
+        [Required(ErrorMessage = "Auteur is verplicht")]
+        public int AuteurId { get; set; } // Maak AuteurId nullable
+
+        public List<Auteur>? Auteurs { get; set; }
+
+    }
+}

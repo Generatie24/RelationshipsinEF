@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OneToManyDemo.Data;
 using OneToManyDemo.Models;
 using OneToManyDemo.Models.ViewModels;
+using System.Runtime.InteropServices;
 
 namespace OneToManyDemo.Controllers
 {
@@ -26,7 +27,6 @@ namespace OneToManyDemo.Controllers
 
             return View(boekAuteurViewModel);
         }
-
         public async Task<IActionResult> Filters(int? GeselecteerdeAuteurId)
         {
             var auteurs = await _context.Auteurs.ToListAsync();
@@ -57,6 +57,104 @@ namespace OneToManyDemo.Controllers
 
 
             return View(filtersViewModel);
+        }
+        public async Task<IActionResult> Create()
+        {
+            var auteurs = await _context.Auteurs.ToListAsync();
+            var viewModel = new CreateBoekViewModel
+            {
+                Auteurs = auteurs
+            };
+            return View(viewModel);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateBoekViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Auteurs = await _context.Auteurs.ToListAsync();
+                return View(viewModel);
+            }
+            var newBoek = new Boek
+            {
+                Titel = viewModel.Titel,
+                AuteurId = viewModel.AuteurId
+            };
+            _context.Boeks.Add(newBoek);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Filters));
+        }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var boek = await _context.Boeks
+                .Include(b => b.Auteur)
+                .FirstOrDefaultAsync(b => b.BoekId == id);
+
+            if (boek == null)
+            {
+                return NotFound();
+            }
+
+            return View(boek);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var boek = await _context.Boeks
+               .Include(b => b.Auteur)
+               .FirstOrDefaultAsync(b => b.BoekId == id);
+
+            if (boek == null)
+            {
+                return NotFound();
+            }
+
+            var auteurs = await _context.Auteurs.ToListAsync();
+
+            var viewModel = new EditBoekViewModel
+            {
+                BoekId = boek.BoekId,
+                Titel = boek.Titel,
+                AuteurId = boek.AuteurId,
+                Auteurs = auteurs
+            };
+
+            return View(viewModel);
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditBoekViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Auteurs = await _context.Auteurs.ToListAsync();
+
+                return View(viewModel);
+            }
+            var boek = await _context.Boeks
+                .FindAsync(viewModel.BoekId);
+            if (boek == null)
+            {
+                return NotFound();
+            }
+            boek.Titel = viewModel.Titel;
+            boek.AuteurId = viewModel.AuteurId;
+            _context.Update(boek);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Filters));
         }
     }
 }
