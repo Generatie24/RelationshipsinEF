@@ -155,14 +155,27 @@ namespace OneToManyDemo.Controllers
 
                 return View(viewModel);
             }
-            var boek = await _context.Boeks
-                .FindAsync(viewModel.BoekId);
+            var boek = await _context.Boeks.FindAsync(viewModel.BoekId);
             if (boek == null)
             {
                 return NotFound();
             }
-            boek.Titel = viewModel.Titel;
-            boek.AuteurId = viewModel.AuteurId;
+
+            var auteurs = await _context.Auteurs.ToListAsync();
+
+            viewModel = new EditBoekViewModel
+            {
+                BoekId = boek.BoekId,
+                Titel = boek.Titel,
+                AuteurId = boek.AuteurId,
+                Auteurs = auteurs,
+                IsAvailable = (bool)boek.IsAvailable,
+                IsNewRelease = (bool)boek.IsNewRelease,
+                IsBestSeller = (bool)boek.IsBestSeller,
+                BindingType = boek.BindingType
+            };
+           
+            
             _context.Update(boek);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Filters));
