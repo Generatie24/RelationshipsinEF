@@ -64,6 +64,7 @@ namespace OneToManyDemo.Controllers
             var auteurs = await _context.Auteurs.ToListAsync();
             var viewModel = new CreateBoekViewModel
             {
+               
                 Auteurs = auteurs
             };
             return View(viewModel);
@@ -82,7 +83,12 @@ namespace OneToManyDemo.Controllers
             var newBoek = new Boek
             {
                 Titel = viewModel.Titel,
-                AuteurId = viewModel.AuteurId
+                AuteurId = viewModel.AuteurId,
+                IsAvailable = viewModel.IsAvailable,
+                IsNewRelease = viewModel.IsNewRelease,
+                IsBestSeller = viewModel.IsBestSeller,
+                BindingType = viewModel.BindingType
+
             };
             _context.Boeks.Add(newBoek);
             await _context.SaveChangesAsync();
@@ -129,7 +135,11 @@ namespace OneToManyDemo.Controllers
                 BoekId = boek.BoekId,
                 Titel = boek.Titel,
                 AuteurId = boek.AuteurId,
-                Auteurs = auteurs
+                Auteurs = auteurs,
+                IsAvailable = (bool)boek.IsAvailable,
+                IsNewRelease = (bool)boek.IsNewRelease,
+                IsBestSeller = (bool)boek.IsBestSeller,
+                BindingType = boek.BindingType
             };
 
             return View(viewModel);

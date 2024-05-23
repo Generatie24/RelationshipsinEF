@@ -14,5 +14,25 @@ namespace OneToManyDemo.Models
         [ForeignKey("Auteur")]
         public int AuteurId { get; set; }
         public Auteur Auteur { get; set; }
+
+        public bool? IsAvailable { get; set; }
+        public bool? IsNewRelease { get; set; }
+        public bool? IsBestSeller { get; set; }
+
+        public int? BindingType { get; set; }
+
+        public string GetBindingType
+        {
+            get
+            {
+                return BindingType switch
+                {
+                    1 => "Paperback",
+                    2 => "Hardcover",
+                    3 => "E-book",
+                    _ => "Unknown"
+                };
+            }
+        }
     }
 }

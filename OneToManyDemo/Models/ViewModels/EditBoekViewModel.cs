@@ -14,5 +14,13 @@ namespace OneToManyDemo.Models.ViewModels
 
         public List<Auteur>? Auteurs { get; set; }
 
+
+
+        public bool IsAvailable { get; set; }
+        public bool IsNewRelease { get; set; }
+        public bool IsBestSeller { get; set; }
+
+        [Required(ErrorMessage = "Een optie moet worden geselecteerd")]
+        public int? BindingType { get; set; }
     }
 }
