@@ -136,9 +136,9 @@ namespace OneToManyDemo.Controllers
                 Titel = boek.Titel,
                 AuteurId = boek.AuteurId,
                 Auteurs = auteurs,
-                IsAvailable = (bool)boek.IsAvailable,
-                IsNewRelease = (bool)boek.IsNewRelease,
-                IsBestSeller = (bool)boek.IsBestSeller,
+                IsAvailable = boek.IsAvailable.GetValueOrDefault(),
+                IsNewRelease = boek.IsNewRelease.GetValueOrDefault(),
+                IsBestSeller = boek.IsBestSeller.GetValueOrDefault(),
                 BindingType = boek.BindingType
             };
 
@@ -163,19 +163,13 @@ namespace OneToManyDemo.Controllers
 
             var auteurs = await _context.Auteurs.ToListAsync();
 
-            viewModel = new EditBoekViewModel
-            {
-                BoekId = boek.BoekId,
-                Titel = boek.Titel,
-                AuteurId = boek.AuteurId,
-                Auteurs = auteurs,
-                IsAvailable = (bool)boek.IsAvailable,
-                IsNewRelease = (bool)boek.IsNewRelease,
-                IsBestSeller = (bool)boek.IsBestSeller,
-                BindingType = boek.BindingType
-            };
-           
-            
+            boek.Titel = viewModel.Titel;
+            boek.AuteurId = viewModel.AuteurId;
+            boek.IsAvailable = viewModel.IsAvailable;
+            boek.IsNewRelease = viewModel.IsNewRelease;
+            boek.IsBestSeller = viewModel.IsBestSeller;
+            boek.BindingType = viewModel.BindingType;
+
             _context.Update(boek);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Filters));
